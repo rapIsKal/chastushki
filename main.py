@@ -1,25 +1,26 @@
 import asyncio
 import os
-import subprocess
 
 from TTS.api import TTS
+from aiogram.types import FSInputFile
 
 os.environ["PATH"] += os.pathsep + "/opt/homebrew/bin"
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from pydub import AudioSegment
+from dotenv import load_dotenv
 
+load_dotenv()
 
-BOT_TOKEN = "ВАШ_ТОКЕН_ОТ_BOTFATHER"
+BOT_TOKEN = os.getenv("BOT_TOKEN")
 MELODY_PATH = "otbivka.mp3"
 
 tts = TTS(model_name="tts_models/multilingual/multi-dataset/xtts_v2", progress_bar=False)
-#print(tts.speakers)
 
-#bot = Bot(token=BOT_TOKEN)
+bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
-# === Функции ===
+
 
 
 def text_to_speech(text: str, filename: str, language: str = 'ru'):
@@ -54,14 +55,11 @@ async def handle_text(message: types.Message):
     mix_audio(tts_path, output_path)
 
     # 3️⃣ Отправляем результат
-    with open(output_path, "rb") as audio:
-        await message.answer_audio(audio, title="Твоя частушка 🎶")
+    audio = FSInputFile(output_path)
+    await message.answer_audio(audio, title="Твоя частушка 🎶")
 
 if __name__ == "__main__":
-    # asyncio.run(dp.start_polling(bot))
-    tts_path = "tts.wav"
-    output_path = "final.mp3"
-    text = 'сидит Гитлер на берёзе, а берёза гнётся, посмотри, товарищ Сталин, как он наебнётся, '
-    text_to_speech(text, tts_path)
-    mix_audio(tts_path, output_path)
+    print('running bot...')
+    asyncio.run(dp.start_polling(bot))
+
 
