@@ -14,13 +14,10 @@ load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 MELODY_PATH = "otbivka.mp3"
-
 tts = TTS(model_name="tts_models/multilingual/multi-dataset/xtts_v2", progress_bar=False)
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
-
-
 
 
 def text_to_speech(text: str, filename: str, language: str = 'ru'):
@@ -34,11 +31,12 @@ def mix_audio(voice_path: str, output_path: str):
     combined = voice + melody
     combined.export(output_path, format="mp3")
 
-# === Хендлеры ===
 
 @dp.message(Command("start"))
 async def start(message: types.Message):
-    await message.answer("Привет! Отправь мне текст — я спою его как частушку 🎤🎶")
+    await message.answer("Хеллоу май френд, пишешь текст, делаем частушечку, "
+                         "если нужно кастомное ударение - пишешь ' после ударной гласной")
+
 
 @dp.message()
 async def handle_text(message: types.Message):
@@ -56,10 +54,12 @@ async def handle_text(message: types.Message):
 
     # 3️⃣ Отправляем результат
     audio = FSInputFile(output_path)
-    await message.answer_audio(audio, title="Твоя частушка 🎶")
+    await message.answer_audio(audio, title="Рви меха")
 
 if __name__ == "__main__":
     print('running bot...')
     asyncio.run(dp.start_polling(bot))
+    # tts_path = "tts.wav"
+    # text_to_speech('мол+око', tts_path)
 
 
