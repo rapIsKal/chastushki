@@ -1,8 +1,10 @@
 import asyncio
 import os
+import wave
+import soundfile as sf
 
-from TTS.api import TTS
 from aiogram.types import FSInputFile
+from piper import PiperVoice
 
 os.environ["PATH"] += os.pathsep + "/opt/homebrew/bin"
 from aiogram import Bot, Dispatcher, types
@@ -14,14 +16,20 @@ load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 MELODY_PATH = "otbivka.mp3"
-tts = TTS(model_name="tts_models/multilingual/multi-dataset/xtts_v2", progress_bar=False)
+voice = PiperVoice.load("piper_models/ru_RU-irina-medium.onnx")
+
+import torch
+
+device = torch.device('cpu')
+
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
 
-def text_to_speech(text: str, filename: str, language: str = 'ru'):
-    tts.tts_to_file(text=text, file_path=filename, language=language, speaker_id='Claribel Dervla')
+def text_to_speech(text: str, filename: str):
+    with wave.open(filename, "wb") as wav_file:
+        voice.synthesize_wav(text, wav_file)
 
 
 def mix_audio(voice_path: str, output_path: str):
@@ -41,18 +49,12 @@ async def start(message: types.Message):
 @dp.message()
 async def handle_text(message: types.Message):
     text = message.text.strip()
-    await message.answer("🎙 Озвучиваю твой текст, подожди немного...")
+    await message.answer("Ильинишна разогревается сэмом, обожжи...")
 
     tts_path = "tts.wav"
     output_path = "final.mp3"
-
-    # 1️⃣ Озвучиваем текст
     text_to_speech(text, tts_path)
-
-    # 2️⃣ Склеиваем с мелодией
     mix_audio(tts_path, output_path)
-
-    # 3️⃣ Отправляем результат
     audio = FSInputFile(output_path)
     await message.answer_audio(audio, title="Рви меха")
 
