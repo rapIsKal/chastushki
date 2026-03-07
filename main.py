@@ -8,8 +8,6 @@ from dotenv import load_dotenv
 from piper import PiperVoice
 from pydub import AudioSegment
 
-
-
 os.environ["PATH"] += os.pathsep + "/opt/homebrew/bin"
 
 load_dotenv()
@@ -45,7 +43,7 @@ async def start(message: types.Message) -> None:
 
 @dp.message()
 async def handle_text(message: types.Message) -> None:
-    text = message.text.strip()
+    text = message.text.strip().replace("'", "<[stress]>")
     await message.answer("Ильинишна разогревается сэмом, обожжи...")
 
     tts_path = "tts.wav"
