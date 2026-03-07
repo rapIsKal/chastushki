@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 from piper import PiperVoice
 from pydub import AudioSegment
 
+
+
 os.environ["PATH"] += os.pathsep + "/opt/homebrew/bin"
 
 load_dotenv()
