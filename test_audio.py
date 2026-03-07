@@ -2,7 +2,8 @@ import sys
 from main import text_to_speech, mix_audio, MELODY_PATH
 
 if __name__ == "__main__":
-    text = input("Введите текст")
+    with open("test.txt", "r") as f:
+        text = f.read().strip()
     tts_path = "test_tts.wav"
     output_path = "test_final.mp3"
     text_to_speech(text, tts_path)
