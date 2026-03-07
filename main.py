@@ -1,6 +1,7 @@
 import asyncio
 import wave
 import os
+import re
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from aiogram.types import FSInputFile
@@ -43,7 +44,9 @@ async def start(message: types.Message) -> None:
 
 @dp.message()
 async def handle_text(message: types.Message) -> None:
-    text = message.text.strip().replace("'", "<[stress]>")
+    text = message.text.strip()
+    # Replace vowel + ' with stress tags around vowel
+    text = re.sub(r'([аеиоуыэюя])\'', r'<[stress]>\1</[stress]>', text)
     await message.answer("Ильинишна разогревается сэмом, обожжи...")
 
     tts_path = "tts.wav"
