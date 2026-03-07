@@ -1,15 +1,14 @@
 import asyncio
 import os
 import wave
-
-os.environ["PATH"] += os.pathsep + "/opt/homebrew/bin"
-
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from aiogram.types import FSInputFile
 from dotenv import load_dotenv
 from piper import PiperVoice
 from pydub import AudioSegment
+
+os.environ["PATH"] += os.pathsep + "/opt/homebrew/bin"
 
 load_dotenv()
 
