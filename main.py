@@ -4,7 +4,6 @@ import wave
 
 os.environ["PATH"] += os.pathsep + "/opt/homebrew/bin"
 
-import torch
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from aiogram.types import FSInputFile
@@ -17,7 +16,6 @@ load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 MELODY_PATH = "otbivka.mp3"
 voice = PiperVoice.load("piper_models/ru_RU-irina-medium.onnx")
-device = torch.device("cpu")
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
