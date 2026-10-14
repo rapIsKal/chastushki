@@ -1,0 +1,11 @@
+.git
+.github
+.idea
+venv
+.venv
+__pycache__
+.env
+*.wav
+*.mp3
+!otbivka.mp3
+test*.txt
