@@ -2,6 +2,7 @@ import asyncio
 import wave
 import os
 import re
+import tempfile
 import numpy as np
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
@@ -145,12 +146,15 @@ async def handle_text(message: types.Message) -> None:
     text = message.text.strip()
     await message.answer("Ильинишна разогревается сэмом, обожжи...")
 
-    tts_path = "tts.wav"
-    output_path = "final.mp3"
-    text_to_speech(text, tts_path)
-    mix_audio(tts_path, output_path)
-    audio = FSInputFile(output_path)
-    await message.answer_audio(audio, title="Рви меха")
+    # Отдельная папка на каждый запрос, чтобы пользователи
+    # не получали чужие файлы
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        tts_path = os.path.join(tmp_dir, "tts.wav")
+        output_path = os.path.join(tmp_dir, "final.mp3")
+        text_to_speech(text, tts_path)
+        mix_audio(tts_path, output_path)
+        audio = FSInputFile(output_path)
+        await message.answer_audio(audio, title="Рви меха")
 
 
 if __name__ == "__main__":
